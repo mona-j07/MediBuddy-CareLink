@@ -2,10 +2,10 @@
  * API Service
  * Centralized API calls for the frontend.
  */
-// Change this to your live Render backend URL when deploying (e.g., https://medibuddy-backend.onrender.com/api)
+// Change this to your live Render backend URL when deploying
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? '/api' 
-  : 'https://medibuddy-carelink-backend.onrender.com/api'; 
+  : 'https://medibuddy-ai-k4pn.onrender.com/api'; 
 
 const api = {
   async get(endpoint) {
