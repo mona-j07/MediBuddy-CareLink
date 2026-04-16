@@ -19,7 +19,9 @@ export const showDoctorsUI = (doctors) => {
     card.innerHTML = `
       <div class="doc-info">
         <h3>${doc.name}</h3>
-        <p>${doc.specialization}</p>
+        <p class="specialization">${doc.specialization}</p>
+        <p class="hospital">${doc.hospital_name}</p>
+        <p class="location">${doc.taluk}, ${doc.district}</p>
         <span class="distance">📍 ${doc.distance}</span>
       </div>
       <div class="doc-actions">

@@ -52,13 +52,13 @@ class DoctorService {
    * Add a new doctor (Admin)
    */
   async addDoctor(doctorData) {
-    const { name, specialization, hospital_name, latitude, longitude, phone } = doctorData;
+    const { name, specialization, hospital_name, district, taluk, latitude, longitude, phone } = doctorData;
     const query = `
-      INSERT INTO doctors (name, specialization, hospital_name, latitude, longitude, phone)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO doctors (name, specialization, hospital_name, district, taluk, latitude, longitude, phone)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
-    const params = [name, specialization, hospital_name, latitude, longitude, phone];
+    const params = [name, specialization, hospital_name, district, taluk, latitude, longitude, phone];
     const result = await db.query(query, params);
     return result.rows[0];
   }
