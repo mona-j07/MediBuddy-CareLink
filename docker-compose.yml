@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: medibuddy-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=medibuddy_pg_pass
+      - DB_NAME=medibuddy
+      - MONGO_URI=mongodb://mongo:27017/medibuddy
+      - REDIS_URL=redis://redis:6379
+      - AI_SERVICE_URL=http://ai-service:8000
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+      - ai-service
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  ai-service:
+    build: ./ai
+    container_name: medibuddy-ai
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ai:/app
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: medibuddy-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=medibuddy_pg_pass
+      - POSTGRES_DB=medibuddy
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mongo:
+    image: mongo:6
+    container_name: medibuddy-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: medibuddy-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
+  mongodata:

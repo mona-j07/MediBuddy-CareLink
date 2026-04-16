@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MediBuddy CareLink – Voice AI Rural & Elder Healthcare Platform. Instant healthcare for rural India via AI-powered voice interaction." />
+  <title>MediBuddy CareLink – Voice AI Healthcare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+<!-- ======================== AUTH SCREEN ======================== -->
+<div id="auth-screen" class="auth-screen" style="display:none">
+  <div class="auth-bg-shapes">
+    <div class="auth-shape shape-1"></div>
+    <div class="auth-shape shape-2"></div>
+    <div class="auth-shape shape-3"></div>
+  </div>
+  <div class="auth-container">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 60 60" fill="none">
+            <path d="M30 10 L30 50 M10 30 L50 30" stroke="white" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="30" cy="30" r="6" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="auth-brand">MediBuddy <span>CareLink</span></h1>
+          <p class="auth-tagline">Voice AI Rural Healthcare</p>
+        </div>
+      </div>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <span class="af-icon">🩺</span>
+          <div><strong>AI Symptom Triage</strong><p>Instant health assessment in your language</p></div>
+        </div>
+        <div class="auth-feature">
+          <span class="af-icon">🎙️</span>
+          <div><strong>Voice-First Interface</strong><p>Speak to navigate — perfect for rural users</p></div>
+        </div>
+        <div class="auth-feature">
+          <span class="af-icon">🆘</span>
+          <div><strong>Emergency SOS</strong><p>One tap to alert family & nearest hospital</p></div>
+        </div>
+        <div class="auth-feature">
+          <span class="af-icon">💊</span>
+          <div><strong>Medicine Tracker</strong><p>Never miss a dose with smart reminders</p></div>
+        </div>
+      </div>
+      <div class="auth-demo-note">
+        <span>🔓</span>
+        <span>No DB? Use demo credentials to explore the full app</span>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login">Sign In</button>
+        <button class="auth-tab" id="tab-register">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form class="auth-form" id="login-form" autocomplete="on">
+        <div class="auth-form-group">
+          <label for="login-phone">📱 Phone Number</label>
+          <input type="tel" id="login-phone" placeholder="e.g. 9999999999" maxlength="10" autocomplete="tel" required />
+        </div>
+        <div class="auth-form-group">
+          <label for="login-password">🔒 Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle">👁️</button>
+          </div>
+        </div>
+        <div id="auth-error" class="auth-error" style="display:none"></div>
+        <button type="submit" class="auth-submit-btn" id="login-btn">🔐 Sign In</button>
+        <div class="auth-divider"><span>or try demo</span></div>
+        <div class="demo-pills">
+          <button type="button" class="demo-pill" data-phone="9999999999" data-password="demo123">👴 Patient</button>
+          <button type="button" class="demo-pill" data-phone="8888888888" data-password="demo123">👨‍⚕️ Doctor</button>
+          <button type="button" class="demo-pill" data-phone="7777777777" data-password="demo123">👩 Caretaker</button>
+          <button type="button" class="demo-pill" data-phone="6666666666" data-password="demo123">🏥 CHW</button>
+        </div>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form class="auth-form hidden" id="register-form" autocomplete="on">
+        <div class="auth-form-group">
+          <label for="reg-name">👤 Full Name *</label>
+          <input type="text" id="reg-name" placeholder="e.g. Rajan Kumar" autocomplete="name" required />
+        </div>
+        <div class="auth-form-row">
+          <div class="auth-form-group">
+            <label for="reg-phone">📱 Phone Number *</label>
+            <input type="tel" id="reg-phone" placeholder="10-digit mobile" maxlength="10" required />
+          </div>
+          <div class="auth-form-group">
+            <label for="reg-age">🎂 Age</label>
+            <input type="number" id="reg-age" placeholder="e.g. 55" min="1" max="120" />
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="reg-password">🔒 Password * (min 6 chars)</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-password" placeholder="Create password" autocomplete="new-password" required />
+            <button type="button" class="pw-toggle">👁️</button>
+          </div>
+        </div>
+        <div class="auth-form-row">
+          <div class="auth-form-group">
+            <label for="reg-role">🏷️ Role *</label>
+            <select id="reg-role" required>
+              <option value="CLIENT">Patient (Client)</option>
+              <option value="CARETAKER">Caretaker</option>
+              <option value="DOCTOR">Doctor</option>
+            </select>
+          </div>
+          <div class="auth-form-group">
+            <label for="reg-gender">⚧ Gender</label>
+            <select id="reg-gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="reg-language">🌐 Preferred Language</label>
+          <select id="reg-language">
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="mr">मराठी (Marathi)</option>
+          </select>
+        </div>
+        <div id="auth-error" class="auth-error" style="display:none"></div>
+        <button type="submit" class="auth-submit-btn" id="register-btn">🚀 Create Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SPLASH SCREEN ======================== -->
+<div id="splash-screen" class="splash">
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring delay-1"></div>
+      <div class="pulse-ring delay-2"></div>
+      <div class="logo-circle">
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 10 L30 50 M10 30 L50 30" stroke="white" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="6" fill="white"/>
+        </svg>
+      </div>
+    </div>
+    <h1 class="splash-title">MediBuddy <span>CareLink</span></h1>
+    <p class="splash-tagline">When a patient speaks, healthcare responds instantly.</p>
+    <div class="splash-loader">
+      <div class="loader-bar"></div>
+    </div>
+    <p class="splash-init" id="init-text">Initializing Voice AI Engine…</p>
+  </div>
+</div>
+
+<!-- ======================== APP WRAPPER ======================== -->
+<div id="app" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon-sm">
+          <svg viewBox="0 0 30 30" fill="none"><path d="M15 3 L15 27 M3 15 L27 15" stroke="white" stroke-width="3.5" stroke-linecap="round"/><circle cx="15" cy="15" r="4" fill="white"/></svg>
+        </div>
+        <span>MediBuddy</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">&#9776;</button>
+    </div>
+
+    <div class="user-card">
+      <div class="user-avatar" id="user-avatar">R</div>
+      <div class="user-info">
+        <p class="user-name" id="user-name">Rajan Kumar</p>
+        <p class="user-role">Elder Patient</p>
+      </div>
+      <div class="health-score" title="Health Score">
+        <span>82</span>
+        <small>Score</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard" id="nav-dashboard">
+        <span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="triage" id="nav-triage">
+        <span class="nav-icon">🩺</span><span class="nav-label">AI Triage</span>
+      </button>
+      <button class="nav-item" data-view="medicine" id="nav-medicine">
+        <span class="nav-icon">💊</span><span class="nav-label">Medicines</span>
+      </button>
+      <button class="nav-item" data-view="health-history" id="nav-health-history">
+        <span class="nav-icon">📋</span><span class="nav-label">Health History</span>
+      </button>
+      <button class="nav-item" data-view="maps" id="nav-maps">
+        <span class="nav-icon">🗺️</span><span class="nav-label">Nearby Care</span>
+      </button>
+      <button class="nav-item" data-view="community" id="nav-community">
+        <span class="nav-icon">🌍</span><span class="nav-label">Community</span>
+      </button>
+      <button class="nav-item" data-view="family" id="nav-family">
+        <span class="nav-icon">👨‍👩‍👧</span><span class="nav-label">Family Hub</span>
+      </button>
+      <button class="nav-item" data-view="doctor" id="nav-doctor">
+        <span class="nav-icon">👨‍⚕️</span><span class="nav-label">Doctors</span>
+      </button>
+
+      <div class="nav-separator"></div>
+
+      <button class="nav-item emergency-nav" id="nav-emergency">
+        <span class="nav-icon">🆘</span><span class="nav-label">Emergency SOS</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="connection-status" id="connection-status">
+        <span class="status-dot online"></span>
+        <span>Online · Voice Ready</span>
+      </div>
+      <button class="logout-btn" id="logout-btn" title="Sign Out">🚪 Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menu-btn" aria-label="Open Menu">&#9776;</button>
+        <div class="breadcrumb" id="breadcrumb">Dashboard</div>
+      </div>
+      <div class="topbar-center">
+        <div class="language-selector">
+          <select id="language-select" aria-label="Select Language">
+            <option value="en">🇮🇳 English</option>
+            <option value="hi">🇮🇳 हिंदी</option>
+            <option value="ta">🇮🇳 தமிழ்</option>
+            <option value="te">🇮🇳 తెలుగు</option>
+            <option value="kn">🇮🇳 ಕನ್ನಡ</option>
+            <option value="mr">🇮🇳 मराठी</option>
+          </select>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="notif-bell" id="notif-btn" title="Notifications">
+          🔔 <span class="notif-badge" id="notif-badge">3</span>
+        </div>
+        <div class="user-avatar-sm" id="topbar-avatar">R</div>
+      </div>
+    </header>
+
+    <!-- VIEWS CONTAINER -->
+    <div class="views-container">
+
+      <!-- ========== DASHBOARD VIEW ========== -->
+      <section class="view active" id="view-dashboard">
+        <div class="view-header">
+          <h1>Good Evening, Rajan 👋</h1>
+          <p class="view-subtitle">Your health is being monitored. Voice assistant is active.</p>
+        </div>
+
+        <!-- VITALS ROW -->
+        <div class="cards-grid vitals-grid">
+          <div class="vital-card heartrate">
+            <div class="vital-icon">❤️</div>
+            <div class="vital-data">
+              <span class="vital-value" id="hr-value">72</span>
+              <span class="vital-unit">bpm</span>
+            </div>
+            <p class="vital-label">Heart Rate</p>
+            <div class="vital-trend up">▲ Normal</div>
+          </div>
+          <div class="vital-card spo2">
+            <div class="vital-icon">🫁</div>
+            <div class="vital-data">
+              <span class="vital-value" id="spo2-value">98</span>
+              <span class="vital-unit">%</span>
+            </div>
+            <p class="vital-label">SpO₂</p>
+            <div class="vital-trend stable">● Stable</div>
+          </div>
+          <div class="vital-card bp">
+            <div class="vital-icon">🩸</div>
+            <div class="vital-data">
+              <span class="vital-value">120</span>
+              <span class="vital-unit">/80</span>
+            </div>
+            <p class="vital-label">Blood Pressure</p>
+            <div class="vital-trend stable">● Normal</div>
+          </div>
+          <div class="vital-card temp">
+            <div class="vital-icon">🌡️</div>
+            <div class="vital-data">
+              <span class="vital-value">98.6</span>
+              <span class="vital-unit">°F</span>
+            </div>
+            <p class="vital-label">Temperature</p>
+            <div class="vital-trend stable">● Normal</div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section-header">
+          <h2>Quick Actions</h2>
+        </div>
+        <div class="quick-actions">
+          <button class="action-btn" onclick="switchView('triage')" id="btn-check-symptoms">
+            <span class="action-icon">🩺</span>
+            <span>Check Symptoms</span>
+          </button>
+          <button class="action-btn" onclick="switchView('medicine')" id="btn-medicines">
+            <span class="action-icon">💊</span>
+            <span>My Medicines</span>
+          </button>
+          <button class="action-btn" onclick="switchView('maps')" id="btn-nearby">
+            <span class="action-icon">🏥</span>
+            <span>Nearby Hospitals</span>
+          </button>
+          <button class="action-btn" onclick="switchView('doctor')" id="btn-doctor">
+            <span class="action-icon">📞</span>
+            <span>Call Doctor</span>
+          </button>
+          <button class="action-btn" onclick="switchView('family')" id="btn-family">
+            <span class="action-icon">👨‍👩‍👧</span>
+            <span>Family Hub</span>
+          </button>
+          <button class="action-btn" onclick="switchView('community')" id="btn-community">
+            <span class="action-icon">🌍</span>
+            <span>Community</span>
+          </button>
+        </div>
+
+        <!-- DASHBOARD BOTTOM GRID -->
+        <div class="dashboard-grid">
+          <!-- Medicine Reminder Card -->
+          <div class="glass-card medicine-reminder-card">
+            <div class="card-header">
+              <h3>💊 Today's Medicines</h3>
+              <span class="badge badge-warning">2 Pending</span>
+            </div>
+            <div class="medicine-list">
+              <div class="medicine-item taken">
+                <div class="med-icon">💊</div>
+                <div class="med-info">
+                  <strong>Metformin 500mg</strong>
+                  <small>8:00 AM · with food</small>
+                </div>
+                <div class="med-status taken">✓ Taken</div>
+              </div>
+              <div class="medicine-item pending">
+                <div class="med-icon">💊</div>
+                <div class="med-info">
+                  <strong>Amlodipine 5mg</strong>
+                  <small>2:00 PM · after lunch</small>
+                </div>
+                <div class="med-status pending">Pending</div>
+              </div>
+              <div class="medicine-item pending">
+                <div class="med-icon">💊</div>
+                <div class="med-info">
+                  <strong>Atorvastatin 10mg</strong>
+                  <small>9:00 PM · before sleep</small>
+                </div>
+                <div class="med-status pending">Pending</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Health Insight -->
+          <div class="glass-card ai-insight-card">
+            <div class="card-header">
+              <h3>🧠 AI Health Insight</h3>
+              <span class="badge badge-info">Live</span>
+            </div>
+            <div class="insight-content">
+              <div class="insight-score">
+                <div class="score-ring" id="health-score-ring">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" class="score-bg"/>
+                    <circle cx="50" cy="50" r="40" class="score-fill" id="score-arc" stroke-dasharray="210 251"/>
+                  </svg>
+                  <div class="score-center">
+                    <span class="score-num">82</span>
+                    <small>/ 100</small>
+                  </div>
+                </div>
+                <div class="score-details">
+                  <p class="score-label">Health Score</p>
+                  <p class="score-status good">Good</p>
+                  <p class="score-note">Based on vitals, medicine adherence & activity</p>
+                </div>
+              </div>
+              <div class="insight-list">
+                <div class="insight-item positive">✅ Blood pressure controlled</div>
+                <div class="insight-item positive">✅ Medicine adherence: 87%</div>
+                <div class="insight-item warning">⚠️ Slight dehydration risk today</div>
+                <div class="insight-item info">💡 Increase water intake — 6 more glasses</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="glass-card activity-card">
+            <div class="card-header">
+              <h3>📋 Recent Activity</h3>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot green"></div>
+                <div class="activity-info">
+                  <strong>Symptom Check Completed</strong>
+                  <small>Today, 10:30 AM · Mild cold — Self-care</small>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot blue"></div>
+                <div class="activity-info">
+                  <strong>Dr. Priya Sharma consulted</strong>
+                  <small>Yesterday, 4:00 PM · Video Call · 12 min</small>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot yellow"></div>
+                <div class="activity-info">
+                  <strong>Metformin dose logged</strong>
+                  <small>Yesterday, 8:00 AM</small>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot purple"></div>
+                <div class="activity-info">
+                  <strong>Lab report uploaded</strong>
+                  <small>Apr 14 · HbA1c, CBC</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community Alert -->
+          <div class="glass-card outbreak-alert-card">
+            <div class="card-header">
+              <h3>🚨 Community Alert</h3>
+              <span class="badge badge-danger">New</span>
+            </div>
+            <div class="alert-content">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-text">
+                <strong>Dengue Cluster Detected</strong>
+                <p>5 cases reported within 3km of your location in the past 48 hours. Authorities have been alerted.</p>
+                <p class="alert-advice">💡 Use mosquito repellent. Stay indoors after dusk.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== TRIAGE VIEW ========== -->
+      <section class="view" id="view-triage">
+        <div class="view-header">
+          <h1>🩺 AI Symptom Triage</h1>
+          <p class="view-subtitle">Describe your symptoms via voice or select from icons below.</p>
+        </div>
+
+        <!-- SYMPTOM ICON GRID -->
+        <div class="section-header"><h2>Select Symptoms</h2></div>
+        <div class="symptom-grid">
+          <button class="symptom-btn" data-symptom="fever" id="sym-fever">🌡️<span>Fever</span></button>
+          <button class="symptom-btn" data-symptom="headache" id="sym-headache">🤕<span>Headache</span></button>
+          <button class="symptom-btn" data-symptom="cough" id="sym-cough">😷<span>Cough</span></button>
+          <button class="symptom-btn" data-symptom="breathlessness" id="sym-breath">💨<span>Breathless</span></button>
+          <button class="symptom-btn" data-symptom="chest_pain" id="sym-chest">💔<span>Chest Pain</span></button>
+          <button class="symptom-btn" data-symptom="stomachache" id="sym-stomach">🤢<span>Stomach Pain</span></button>
+          <button class="symptom-btn" data-symptom="vomiting" id="sym-vomit">🤮<span>Vomiting</span></button>
+          <button class="symptom-btn" data-symptom="diarrhea" id="sym-diar">🚽<span>Diarrhea</span></button>
+          <button class="symptom-btn" data-symptom="dizziness" id="sym-dizzy">😵<span>Dizziness</span></button>
+          <button class="symptom-btn" data-symptom="fatigue" id="sym-fatigue">😴<span>Fatigue</span></button>
+          <button class="symptom-btn" data-symptom="joint_pain" id="sym-joint">🦵<span>Joint Pain</span></button>
+          <button class="symptom-btn" data-symptom="rash" id="sym-rash">🔴<span>Skin Rash</span></button>
+          <button class="symptom-btn" data-symptom="eye_pain" id="sym-eye">👁️<span>Eye Pain</span></button>
+          <button class="symptom-btn" data-symptom="ear_pain" id="sym-ear">👂<span>Ear Pain</span></button>
+          <button class="symptom-btn" data-symptom="nausea" id="sym-nausea">😫<span>Nausea</span></button>
+          <button class="symptom-btn" data-symptom="back_pain" id="sym-back">🔙<span>Back Pain</span></button>
+        </div>
+
+        <!-- SELECTED SYMPTOMS -->
+        <div class="selected-symptoms" id="selected-symptoms">
+          <p class="selected-label">Selected: <span id="symptom-tags">None</span></p>
+        </div>
+
+        <!-- ADDITIONAL INFO -->
+        <div class="triage-info-row">
+          <div class="triage-info-group">
+            <label for="triage-age">Patient Age</label>
+            <input type="number" id="triage-age" value="68" min="1" max="120" />
+          </div>
+          <div class="triage-info-group">
+            <label for="triage-gender">Gender</label>
+            <select id="triage-gender">
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="triage-info-group">
+            <label for="triage-duration">Duration</label>
+            <select id="triage-duration">
+              <option>Today</option><option>2-3 days</option><option>1 week</option><option>1 month+</option>
+            </select>
+          </div>
+          <div class="triage-info-group">
+            <label for="triage-severity">Severity (1–10)</label>
+            <input type="range" id="triage-severity" min="1" max="10" value="5" />
+            <span id="severity-label">5</span>
+          </div>
+        </div>
+
+        <button class="primary-btn analyze-btn" id="analyze-btn">
+          <span class="btn-icon">🧠</span> Analyze with AI
+        </button>
+
+        <!-- TRIAGE RESULT -->
+        <div class="triage-result hidden" id="triage-result">
+          <div class="result-header">
+            <h2>AI Triage Result</h2>
+            <div class="confidence-bar-wrap">
+              <span>AI Confidence</span>
+              <div class="confidence-bar">
+                <div class="confidence-fill" id="confidence-fill"></div>
+              </div>
+              <span id="confidence-score">92%</span>
+            </div>
+          </div>
+
+          <div class="severity-badge-large" id="severity-badge">
+            <span class="severity-icon" id="severity-icon">🟡</span>
+            <div>
+              <strong id="severity-level">CLINIC VISIT ADVISED</strong>
+              <p id="severity-desc">Your symptoms suggest a moderate condition requiring professional evaluation.</p>
+            </div>
+          </div>
+
+          <div class="diagnosis-cards" id="diagnosis-cards"></div>
+
+          <div class="firstaid-section">
+            <h3>🩹 First Aid Instructions</h3>
+            <div class="firstaid-list" id="firstaid-list"></div>
+          </div>
+
+          <div class="triage-actions">
+            <button class="primary-btn" onclick="switchView('doctor')" id="btn-consult">👨‍⚕️ Consult Doctor</button>
+            <button class="secondary-btn" onclick="triggerEmergency()" id="btn-sos-triage">🆘 Emergency SOS</button>
+            <button class="ghost-btn" id="btn-retriage">🔄 Re-assess</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== MEDICINE VIEW ========== -->
+      <section class="view" id="view-medicine">
+        <div class="view-header">
+          <h1>💊 Medicine Tracker</h1>
+          <p class="view-subtitle">Manage and track all your medications with reminders.</p>
+        </div>
+
+        <div class="medicine-stats">
+          <div class="med-stat-card">
+            <span class="stat-icon">✅</span>
+            <div><strong>87%</strong><small>Adherence (30 days)</small></div>
+          </div>
+          <div class="med-stat-card">
+            <span class="stat-icon">💊</span>
+            <div><strong>3</strong><small>Active Medicines</small></div>
+          </div>
+          <div class="med-stat-card">
+            <span class="stat-icon">⏰</span>
+            <div><strong>2</strong><small>Due Today</small></div>
+          </div>
+          <div class="med-stat-card">
+            <span class="stat-icon">📅</span>
+            <div><strong>14</strong><small>Days Streak</small></div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <h2>Active Prescriptions</h2>
+          <button class="icon-btn" id="add-medicine-btn">+ Add Medicine</button>
+        </div>
+
+        <div class="medicines-list" id="medicines-list">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Add Medicine Modal -->
+        <div class="modal hidden" id="add-medicine-modal">
+          <div class="modal-overlay" onclick="closeModal('add-medicine-modal')"></div>
+          <div class="modal-card">
+            <h3>Add New Medicine</h3>
+            <div class="form-group">
+              <label for="med-name">Medicine Name</label>
+              <input type="text" id="med-name" placeholder="e.g. Paracetamol 500mg" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="med-freq">Frequency</label>
+                <select id="med-freq">
+                  <option>Once daily</option><option>Twice daily</option>
+                  <option>Three times daily</option><option>As needed</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="med-time">Time</label>
+                <input type="time" id="med-time" value="08:00" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="med-notes">Notes (optional)</label>
+              <input type="text" id="med-notes" placeholder="e.g. with food, before sleep" />
+            </div>
+            <div class="modal-actions">
+              <button class="primary-btn" id="save-medicine-btn">Save Medicine</button>
+              <button class="ghost-btn" onclick="closeModal('add-medicine-modal')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Adherence Chart -->
+        <div class="section-header" style="margin-top:2rem"><h2>📊 Adherence History</h2></div>
+        <div class="glass-card adherence-chart-card">
+          <div class="adherence-bars" id="adherence-bars"></div>
+          <div class="adherence-legend">
+            <span class="legend-taken">■ Taken</span>
+            <span class="legend-missed">■ Missed</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== HEALTH HISTORY VIEW ========== -->
+      <section class="view" id="view-health-history">
+        <div class="view-header">
+          <h1>📋 Health History</h1>
+          <p class="view-subtitle">Your complete personal health timeline and records.</p>
+        </div>
+
+        <div class="history-filters">
+          <button class="filter-btn active" data-filter="all" id="filter-all">All</button>
+          <button class="filter-btn" data-filter="triage" id="filter-triage">Triage</button>
+          <button class="filter-btn" data-filter="consultation" id="filter-consult">Consultations</button>
+          <button class="filter-btn" data-filter="medicine" id="filter-med">Medicines</button>
+          <button class="filter-btn" data-filter="lab" id="filter-lab">Lab Reports</button>
+        </div>
+
+        <div class="timeline" id="health-timeline">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ========== MAPS VIEW ========== -->
+      <section class="view" id="view-maps">
+        <div class="view-header">
+          <h1>🗺️ Nearby Healthcare</h1>
+          <p class="view-subtitle">Find hospitals, clinics, PHCs and pharmacies near you.</p>
+        </div>
+
+        <div class="map-filters">
+          <button class="filter-btn active" data-type="all" id="map-filter-all">All</button>
+          <button class="filter-btn" data-type="hospital" id="map-filter-hospital">🏥 Hospitals</button>
+          <button class="filter-btn" data-type="phc" id="map-filter-phc">🏠 PHC</button>
+          <button class="filter-btn" data-type="clinic" id="map-filter-clinic">🩺 Clinics</button>
+          <button class="filter-btn" data-type="pharmacy" id="map-filter-pharmacy">💊 Pharmacy</button>
+        </div>
+
+        <div class="map-layout">
+          <div class="map-container" id="map-container">
+            <div class="map-placeholder">
+              <div class="map-bg">
+                <div class="map-marker hospital" style="top:30%;left:45%">
+                  <span>🏥</span><div class="marker-label">District Hospital</div>
+                </div>
+                <div class="map-marker phc" style="top:55%;left:25%">
+                  <span>🏠</span><div class="marker-label">PHC Kalyanpur</div>
+                </div>
+                <div class="map-marker clinic" style="top:40%;left:65%">
+                  <span>🩺</span><div class="marker-label">Dr. Sharma Clinic</div>
+                </div>
+                <div class="map-marker pharmacy" style="top:65%;left:55%">
+                  <span>💊</span><div class="marker-label">Medplus Pharmacy</div>
+                </div>
+                <div class="map-marker user-loc" style="top:50%;left:50%">
+                  <span>📍</span><div class="marker-label you">You</div>
+                </div>
+              </div>
+              <p class="map-note">📡 Live map via Google Maps API (connect API key in config)</p>
+            </div>
+          </div>
+
+          <div class="nearby-list">
+            <div class="nearby-item" id="nearby-1">
+              <div class="nearby-icon">🏥</div>
+              <div class="nearby-info">
+                <strong>District Government Hospital</strong>
+                <p>1.2 km away · Emergency: 24/7</p>
+                <p class="nearby-tags"><span class="tag">ICU</span><span class="tag">Surgery</span><span class="tag">Pediatrics</span></p>
+              </div>
+              <button class="nav-btn" onclick="showDirections('District Hospital')" id="dir-hospital">Navigate</button>
+            </div>
+            <div class="nearby-item" id="nearby-2">
+              <div class="nearby-icon">🏠</div>
+              <div class="nearby-info">
+                <strong>PHC Kalyanpur</strong>
+                <p>2.8 km away · Open 8AM–6PM</p>
+                <p class="nearby-tags"><span class="tag">Free</span><span class="tag">Govt.</span><span class="tag">Vaccination</span></p>
+              </div>
+              <button class="nav-btn" onclick="showDirections('PHC Kalyanpur')" id="dir-phc">Navigate</button>
+            </div>
+            <div class="nearby-item" id="nearby-3">
+              <div class="nearby-icon">🩺</div>
+              <div class="nearby-info">
+                <strong>Dr. Priya Sharma Clinic</strong>
+                <p>0.8 km away · Open Now</p>
+                <p class="nearby-tags"><span class="tag">General</span><span class="tag">Diabetes</span></p>
+              </div>
+              <button class="nav-btn" onclick="showDirections('Dr Sharma Clinic')" id="dir-clinic">Navigate</button>
+            </div>
+            <div class="nearby-item" id="nearby-4">
+              <div class="nearby-icon">💊</div>
+              <div class="nearby-info">
+                <strong>Medplus Pharmacy</strong>
+                <p>0.4 km away · Open 24/7</p>
+                <p class="nearby-tags"><span class="tag">Pharmacy</span><span class="tag">Diagnostics</span></p>
+              </div>
+              <button class="nav-btn" onclick="showDirections('Medplus')" id="dir-pharmacy">Navigate</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== COMMUNITY VIEW ========== -->
+      <section class="view" id="view-community">
+        <div class="view-header">
+          <h1>🌍 Community Health</h1>
+          <p class="view-subtitle">Village-level health tracking, outbreak alerts and healthcare drives.</p>
+        </div>
+
+        <div class="community-grid">
+          <div class="glass-card community-stats-card">
+            <h3>📊 Village Health Stats</h3>
+            <div class="comm-stats">
+              <div class="comm-stat"><span class="comm-num">1,240</span><small>Residents Tracked</small></div>
+              <div class="comm-stat"><span class="comm-num">86</span><small>Active Patients</small></div>
+              <div class="comm-stat"><span class="comm-num">12</span><small>CHW Active</small></div>
+            </div>
+            <div class="disease-tracker" id="disease-tracker">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="glass-card outbreak-map-card">
+            <h3>🔴 Outbreak Detection</h3>
+            <div class="outbreak-info">
+              <p class="outbreak-status active">⚠️ Active Monitoring</p>
+              <div class="outbreak-list" id="outbreak-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            <button class="primary-btn ghost-btn small" id="report-symptom-btn">+ Report Community Case</button>
+          </div>
+
+          <div class="glass-card drives-card">
+            <h3>📅 Upcoming Health Drives</h3>
+            <div class="drives-list" id="drives-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="glass-card chw-card">
+            <h3>👷 Community Health Workers</h3>
+            <div class="chw-list" id="chw-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== FAMILY VIEW ========== -->
+      <section class="view" id="view-family">
+        <div class="view-header">
+          <h1>👨‍👩‍👧 Family Hub</h1>
+          <p class="view-subtitle">Monitor and manage health for your entire family.</p>
+        </div>
+
+        <div class="family-grid" id="family-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ========== DOCTOR VIEW ========== -->
+      <section class="view" id="view-doctor">
+        <div class="view-header">
+          <h1>👨‍⚕️ Doctor Connect</h1>
+          <p class="view-subtitle">Consult with verified doctors via video, audio or chat.</p>
+        </div>
+
+        <div class="trust-score-banner">
+          <span>🧠 AI Trust Score for your current condition:</span>
+          <div class="trust-meter">
+            <div class="trust-fill" style="width:34%"></div>
+          </div>
+          <span class="trust-value">34%</span>
+          <span class="trust-advice">→ AI recommends Doctor Consultation</span>
+        </div>
+
+        <div class="doctors-grid" id="doctors-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+    </div><!-- /views-container -->
+  </main>
+</div><!-- /app -->
+
+<!-- ======================== VOICE BUTTON (FLOATING) ======================== -->
+<div class="voice-fab-container" id="voice-fab-container">
+  <div class="voice-rings" id="voice-rings">
+    <div class="vring vring-1"></div>
+    <div class="vring vring-2"></div>
+    <div class="vring vring-3"></div>
+  </div>
+  <button class="voice-fab" id="voice-fab" aria-label="Activate Voice Assistant">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="15" y="5" width="10" height="20" rx="5" fill="white"/>
+      <path d="M8 22c0 6.627 5.373 12 12 12s12-5.373 12-12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="34" x2="20" y2="39" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="15" y1="39" x2="25" y2="39" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ======================== VOICE PANEL ======================== -->
+<div class="voice-panel hidden" id="voice-panel">
+  <div class="voice-panel-header">
+    <div class="voice-status-indicator" id="voice-status-dot"></div>
+    <h3 id="voice-panel-title">Voice Assistant Active</h3>
+    <button class="close-voice" id="close-voice" aria-label="Close Voice Panel">✕</button>
+  </div>
+  <div class="voice-waveform" id="voice-waveform">
+    <div class="wave-bar" style="--delay:0s"></div>
+    <div class="wave-bar" style="--delay:0.1s"></div>
+    <div class="wave-bar" style="--delay:0.2s"></div>
+    <div class="wave-bar" style="--delay:0.05s"></div>
+    <div class="wave-bar" style="--delay:0.15s"></div>
+    <div class="wave-bar" style="--delay:0.25s"></div>
+    <div class="wave-bar" style="--delay:0.08s"></div>
+    <div class="wave-bar" style="--delay:0.18s"></div>
+  </div>
+  <div class="voice-transcript" id="voice-transcript">
+    <p class="transcript-placeholder">Say something like: "I have fever and headache" or "Call doctor" or "Show my medicines"</p>
+  </div>
+  <div class="voice-recognized" id="voice-recognized"></div>
+  <div class="voice-response" id="voice-response"></div>
+  <div class="voice-intents">
+    <p>Try saying:</p>
+    <div class="intent-chips">
+      <span class="intent-chip" onclick="simulateVoice('I have fever and headache')">🌡️ I have fever</span>
+      <span class="intent-chip" onclick="simulateVoice('Show my medicines')">💊 My medicines</span>
+      <span class="intent-chip" onclick="simulateVoice('Emergency help')">🆘 Emergency</span>
+      <span class="intent-chip" onclick="simulateVoice('Find nearest hospital')">🏥 Nearest hospital</span>
+      <span class="intent-chip" onclick="simulateVoice('Call doctor')">👨‍⚕️ Call doctor</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== EMERGENCY MODAL ======================== -->
+<div class="emergency-modal hidden" id="emergency-modal">
+  <div class="em-overlay" onclick="closeEmergency()"></div>
+  <div class="em-card">
+    <div class="em-header">
+      <div class="em-pulse">🆘</div>
+      <h2>EMERGENCY SOS</h2>
+    </div>
+    <div class="em-countdown" id="em-countdown">
+      <div class="em-count-num" id="em-count">5</div>
+      <p>Sending alert in…</p>
+    </div>
+    <div class="em-info">
+      <p>📍 Location: <strong id="em-location">Detecting…</strong></p>
+      <p>🏥 Nearest: <strong>District Hospital (1.2km)</strong></p>
+      <p>📞 Alerting: <strong>Dr. Priya Sharma, Family</strong></p>
+    </div>
+    <div class="em-actions">
+      <button class="cancel-sos-btn" id="cancel-sos-btn" onclick="cancelEmergency()">✕ Cancel SOS</button>
+    </div>
+    <div class="em-status" id="em-status"></div>
+  </div>
+</div>
+
+<!-- ======================== NOTIFICATION PANEL ======================== -->
+<div class="notif-panel hidden" id="notif-panel">
+  <div class="notif-header">
+    <h3>🔔 Notifications</h3>
+    <button onclick="closeNotif()" id="close-notif">✕</button>
+  </div>
+  <div class="notif-list">
+    <div class="notif-item unread">
+      <div class="notif-icon">💊</div>
+      <div class="notif-text"><strong>Medicine Reminder</strong><p>Amlodipine 5mg due at 2:00 PM</p><small>Now</small></div>
+    </div>
+    <div class="notif-item unread">
+      <div class="notif-icon">⚠️</div>
+      <div class="notif-text"><strong>Community Alert</strong><p>Dengue cluster detected nearby</p><small>2h ago</small></div>
+    </div>
+    <div class="notif-item unread">
+      <div class="notif-icon">👨‍⚕️</div>
+      <div class="notif-text"><strong>Doctor Available</strong><p>Dr. Priya Sharma is online</p><small>3h ago</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/voice-engine.js"></script>
+<script src="js/triage-ai.js"></script>
+<script src="js/emergency.js"></script>
+<script src="js/medicine.js"></script>
+<script src="js/community.js"></script>
+<!-- NEW CONTROLLED VOICE & DOCTOR SYSTEM -->
+<script type="module">
+  import voiceService from './services/voice.js';
+  import { showDoctorsUI } from './features/doctorFinder.js';
+  
+  // Initialize voice interaction on FAB click if preferred
+  document.getElementById('voice-fab').addEventListener('click', () => {
+    voiceService.start();
+  });
+</script>
+<script src="js/app.js"></script>
+</body>
+</html>
