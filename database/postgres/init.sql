@@ -212,7 +212,82 @@ INSERT INTO doctors (name, specialization, hospital_name, district, taluk, latit
 ('Dr. K.Saravanan', 'General Physician', 'GH Erode', 'Erode', 'Erode', 11.3410, 77.7155, '0424-2253738'),
 ('Dr. Indirani A', 'General Medicine', 'GH Karur', 'Karur', 'Karur', 10.9590, 78.0784, '04324-260100'),
 ('Dr. M.S.Kumar', 'General Medicine', 'GH Pudukkottai', 'Pudukkottai', 'Pudukkottai', 10.5215, 78.8217, '04322-222864'),
-('Dr. K.Senthil', 'Cardiology', 'GH Thanjavur', 'Thanjavur', 'Thanjavur', 10.7869, 79.1378, '04362-239031');
+('Dr. K.Senthil', 'Cardiology', 'GH Thanjavur', 'Thanjavur', 'Thanjavur', 10.7869, 79.1378, '04362-239031'),
+-- KANYAKUMARI
+('Dr. A. Mary Sheela', 'General Medicine', 'GH Nagercoil', 'Kanyakumari', 'Agastheeswaram', 8.1773, 77.4307, '04652-242031'),
+('Dr. R. Rajesh Kumar', 'Pediatrics', 'GH Padmanabhapuram', 'Kanyakumari', 'Thovalai', 8.2333, 77.5333, '04652-223456'),
+('Dr. S. Lakshmi', 'Obstetrics', 'PHC Rajakkamangalam', 'Kanyakumari', 'Rajakkamangalam', 8.1158, 77.3804, '04652-264123'),
+('Dr. V. Suresh', 'General Surgery', 'GH Colachel', 'Kanyakumari', 'Colachel', 8.1823, 77.2065, '04651-222345'),
+('Dr. P. Anitha', 'General Physician', 'PHC Munchirai', 'Kanyakumari', 'Munchirai', 8.3167, 77.1667, '9445012345'),
+-- KALLAKURICHI
+('Dr. M. Rajendran', 'General Medicine', 'GH Kallakurichi', 'Kallakurichi', 'Kallakurichi', 11.7398, 78.9598, '04323-222001'),
+('Dr. K. Priya', 'Pediatrics', 'PHC Alathur', 'Kallakurichi', 'Chinnasalem', 11.6333, 78.8500, '9445023456'),
+('Dr. R. Siva', 'Orthopedics', 'PHC Kachirapalayam', 'Kallakurichi', 'Kachirapalayam', 11.4000, 78.7667, '9445034567'),
+('Dr. N. Geetha', 'Obstetrics', 'PHC Manalurpet', 'Kallakurichi', 'Manalurpet', 11.7333, 78.9833, '9445045678'),
+-- KANCHIPURAM
+('Dr. T. Venkatesan', 'General Medicine', 'GH Kanchipuram', 'Kanchipuram', 'Kanchipuram', 12.8348, 79.7179, '044-27237420'),
+('Dr. L. Meenakshi', 'General Surgery', 'GH Uthiramerur', 'Kanchipuram', 'Uthiramerur', 12.5967, 79.7533, '044-27552121'),
+('Dr. S. Murugan', 'Pediatrics', 'PHC Walajabad', 'Kanchipuram', 'Walajabad', 12.7333, 79.9833, '9445056789'),
+-- KRISHNAGIRI
+('Dr. G. Palani', 'General Medicine', 'GH Krishnagiri', 'Krishnagiri', 'Krishnagiri', 12.5267, 78.2160, '04343-232200'),
+('Dr. R. Anjali', 'Obstetrics', 'GH Dharmapuri', 'Krishnagiri', 'Dharmapuri', 12.1279, 78.1564, '04342-260273'),
+('Dr. K. Mani', 'Orthopedics', 'PHC Vellore', 'Krishnagiri', 'Vellore', 12.9165, 79.1325, '9445067890'),
+-- MAYILADUTHURAI
+('Dr. P. Suresh Kumar', 'General Medicine', 'GH Mayiladuthurai', 'Mayiladuthurai', 'Mayiladuthurai', 11.1061, 79.6504, '04364-222001'),
+('Dr. V. Uma', 'Pediatrics', 'PHC Seerkazhi', 'Mayiladuthurai', 'Seerkazhi', 11.2405, 79.7963, '9445078901'),
+-- NAGAPATTINAM
+('Dr. A. Ramachandran', 'General Medicine', 'GH Nagapattinam', 'Nagapattinam', 'Nagapattinam', 10.7905, 79.8426, '04365-242201'),
+('Dr. S. Jayalakshmi', 'Obstetrics', 'PHC Vedaranyam', 'Nagapattinam', 'Vedaranyam', 10.3618, 79.8489, '9445089012'),
+-- NAMAKKAL
+('Dr. R. Balakrishnan', 'General Medicine', 'GH Namakkal', 'Namakkal', 'Namakkal', 11.2164, 78.1651, '04286-230200'),
+('Dr. N. Saroja', 'General Surgery', 'GH Rasipuram', 'Namakkal', 'Rasipuram', 11.4553, 78.1835, '04287-222345'),
+-- NILGIRIS
+('Dr. M. Thangaraj', 'General Medicine', 'GH Udhagamandalam', 'Nilgiris', 'Udhagamandalam', 11.4077, 76.6941, '0423-2442241'),
+('Dr. K. Revathi', 'Pediatrics', 'GH Coonoor', 'Nilgiris', 'Coonoor', 11.3430, 76.7705, '0423-2230567'),
+-- PERAMBALUR
+('Dr. S. Krishnan', 'General Medicine', 'GH Perambalur', 'Perambalur', 'Perambalur', 11.1116, 78.9005, '04328-222001'),
+('Dr. P. Geetha', 'Obstetrics', 'PHC Ariyalur', 'Perambalur', 'Ariyalur', 11.1057, 79.2088, '9445090123'),
+-- PUDUKKOTTAI
+('Dr. R. Anbu', 'Orthopedics', 'PHC Aranthangi', 'Pudukkottai', 'Aranthangi', 10.4170, 78.9830, '9445101234'),
+-- RAMANATHAPURAM
+('Dr. V. Rajendran', 'General Medicine', 'GH Ramanathapuram', 'Ramanathapuram', 'Ramanathapuram', 9.3617, 78.8289, '04567-222001'),
+('Dr. L. Saraswathi', 'Pediatrics', 'PHC Rameswaram', 'Ramanathapuram', 'Rameswaram', 9.2878, 79.3179, '9445112345'),
+-- RANIPET
+('Dr. K. Senthil', 'Cardiology', 'GH Ranipet', 'Ranipet', 'Ranipet', 12.9258, 79.1621, '04172-222001'),
+('Dr. T. Meena', 'General Surgery', 'PHC Arcot', 'Ranipet', 'Arcot', 12.9014, 79.3159, '9445123456'),
+-- SALEM
+('Dr. G. Murugesan', 'General Medicine', 'GH Salem', 'Salem', 'Salem', 11.6643, 78.1460, '0427-2333333'),
+('Dr. R. Kavitha', 'Obstetrics', 'GH Mettur', 'Salem', 'Mettur', 11.7864, 77.8003, '9445134567'),
+-- SIVAGANGA
+('Dr. P. Loganathan', 'General Medicine', 'GH Sivaganga', 'Sivaganga', 'Sivaganga', 10.0854, 78.4769, '04575-222001'),
+('Dr. S. Rajalakshmi', 'Pediatrics', 'PHC Manamadurai', 'Sivaganga', 'Manamadurai', 9.9833, 78.3833, '9445145678'),
+-- TENKASI
+('Dr. A. Vijayakumar', 'General Medicine', 'GH Tenkasi', 'Tenkasi', 'Tenkasi', 8.9676, 77.3141, '04633-222001'),
+('Dr. N. Prema', 'General Surgery', 'PHC Sankarankovil', 'Tenkasi', 'Sankarankovil', 8.9500, 77.5500, '9445156789'),
+-- THENI
+('Dr. R. Subramanian', 'General Medicine', 'GH Theni', 'Theni', 'Theni', 10.0107, 77.9850, '04546-222001'),
+('Dr. M. Anuradha', 'Obstetrics', 'PHC Bodi', 'Theni', 'Bodi', 9.8833, 77.3167, '9445167890'),
+-- THOOTHUKUDI
+('Dr. S. Paulraj', 'General Medicine', 'GH Thoothukudi', 'Thoothukudi', 'Thoothukudi', 8.7642, 78.1348, '0461-222001'),
+('Dr. V. Shanthi', 'Pediatrics', 'GH Tiruchendur', 'Thoothukudi', 'Tiruchendur', 8.4975, 78.1337, '9445178901'),
+-- TIRUNELVELI
+('Dr. K. Ramasamy', 'General Medicine', 'GH Tirunelveli', 'Tirunelveli', 'Tirunelveli', 8.7139, 77.7515, '0462-2501354'),
+('Dr. P. Rani', 'Orthopedics', 'GH Cheranmahadevi', 'Tirunelveli', 'Cheranmahadevi', 8.7167, 77.5500, '9445189012'),
+-- TIRUPATHUR
+('Dr. M. Govindan', 'General Medicine', 'GH Tirupathur', 'Tirupathur', 'Tirupathur', 12.4917, 78.5667, '04179-222001'),
+('Dr. S. Tamilselvi', 'Obstetrics', 'PHC Jolarpet', 'Tirupathur', 'Jolarpet', 12.5667, 78.5833, '9445190123'),
+-- TIRUPPUR
+('Dr. R. Dhanalakshmi', 'General Medicine', 'GH Palladam', 'Tiruppur', 'Palladam', 10.9905, 77.3195, '04255-222001'),
+('Dr. V. Thirugnanasambandham', 'Anesthesia', 'GH Kangeyam', 'Tiruppur', 'Kangeyam', 10.9980, 77.6430, '9942360709'),
+-- TIRUVALLUR
+('Dr. A. Selvam', 'General Medicine', 'GH Thiruvallur', 'Tiruvallur', 'Thiruvallur', 13.1425, 80.0106, '044-27660255'),
+('Dr. N. Logeshwaran', 'General Physician', 'PHC Gummidipoondi', 'Tiruvallur', 'Gummidipoondi', 13.4083, 80.1167, '9445201234'),
+-- VELLORE
+('Dr. T. Palaniappan', 'General Medicine', 'GH Vellore', 'Vellore', 'Vellore', 12.9165, 79.1325, '0416-2223444'),
+('Dr. R. Indirani', 'Pediatrics', 'GH Gudiyatham', 'Vellore', 'Gudiyatham', 12.9417, 79.1833, '9445212345'),
+-- VIRUDHUNAGAR
+('Dr. S. Manikandan', 'General Medicine', 'GH Virudhunagar', 'Virudhunagar', 'Virudhunagar', 9.5833, 77.9667, '04562-222001'),
+('Dr. L. Vasanthi', 'Obstetrics', 'PHC Sattur', 'Virudhunagar', 'Sattur', 9.3667, 77.8000, '9445223456');
 
 -- Additional high-traffic markers from the provided table
 INSERT INTO doctors (name, specialization, hospital_name, district, taluk, latitude, longitude, phone) VALUES
