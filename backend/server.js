@@ -41,8 +41,21 @@ const io     = new Server(server, {
 // ── Global Middleware ─────────────────────────────────────────
 app.use(helmet());
 app.use(compression());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'https://medibuddy-carelink-frontend.vercel.app'
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
