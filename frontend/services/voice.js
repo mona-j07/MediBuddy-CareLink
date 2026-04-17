@@ -109,6 +109,23 @@ class VoiceService {
         this.addMedicineByVoice(data);
         break;
 
+      case 'SPEAK_AND_LISTEN':
+        this.speak(data.text, () => {
+          this.start();
+        });
+        break;
+
+      case 'SHOW_RESULT':
+        this.speak(data.text);
+        if (data.condition) {
+          alert(`Analysis Result:\nCondition: ${data.condition}\nConfidence: ${data.confidence * 100}%\nSeverity: ${data.severity}`);
+        }
+        break;
+
+      case 'SPEAK':
+        this.speak(data.text);
+        break;
+
       default:
         this.speak("I'm not sure how to help with that. Could you please repeat?");
         break;
@@ -153,9 +170,15 @@ class VoiceService {
     }
   }
 
-  speak(text) {
+  speak(text, onEndCallback) {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = localStorage.getItem('user_language') || 'en-US';
+    const lang = localStorage.getItem('user_language') || 'en-US';
+    utterance.lang = lang;
+    
+    if (onEndCallback) {
+      utterance.onend = onEndCallback;
+    }
+
     window.speechSynthesis.speak(utterance);
   }
 }
