@@ -2,38 +2,59 @@
  * Auth Controller
  */
 const bcrypt   = require('bcryptjs');
+const jwt      = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
 const db       = require('../../config/database');
-const { generateToken } = require('../../middleware/auth.middleware');
 const logger   = require('../../config/logger');
 
-// In-memory OTP store (use Redis in production)
-const otpStore = new Map();
+// Nodemailer Config
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 exports.register = async (req, res) => {
   try {
-    const { name, phone, password, role, language = 'en', age, gender } = req.body;
+    const { name, email, password, role } = req.body;
+    
+    // Check if exists
+    const existing = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) return res.status(400).json({ error: 'Email already registered' });
 
-    // Check existing user
-    const existing = await db.query('SELECT id FROM users WHERE phone = $1', [phone]);
-    if (existing.rows.length > 0) {
-      return res.status(409).json({ error: 'User with this phone already exists' });
-    }
-
-    const hash   = await bcrypt.hash(password, 12);
-    const userId = uuidv4();
+    const passwordHash = await bcrypt.hash(password, 10);
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+    const id = uuidv4();
 
     await db.query(
-      `INSERT INTO users (id, name, phone, password_hash, role, language, age, gender, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW())`,
-      [userId, name, phone, hash, role, language, age, gender]
+      `INSERT INTO users (id, name, email, password_hash, role, otp_code, otp_expiry, is_verified) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, FALSE)`,
+      [id, name, email, passwordHash, role, otp, expiry]
     );
 
-    const token = generateToken({ id: userId, role, phone });
-    logger.info(`New user registered: ${phone} (${role})`);
-    res.status(201).json({ message: 'Registration successful', token, userId, role });
+    // Send Email
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        await transporter.sendMail({
+          from: `"MediBuddy CareLink" <${process.env.EMAIL_USER}>`,
+          to: email,
+          subject: 'Verify Your MediBuddy Account',
+          html: `<h3>Welcome to MediBuddy!</h3><p>Your verification code is: <b>${otp}</b></p><p>This code expires in 5 minutes.</p>`
+        });
+      } else {
+        logger.warn('EMAIL_USER/PASS not set. Logging OTP instead:', otp);
+      }
+    } catch (mailErr) {
+      logger.error('Mail send failed:', mailErr.message);
+    }
+
+    res.status(201).json({ message: 'OTP sent to email', email, dev_otp: otp });
   } catch (err) {
-    logger.error('Register error:', err);
+    logger.error('register:', err);
     res.status(500).json({ error: 'Registration failed' });
   }
 };
@@ -72,7 +93,7 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user.id, role: user.role, name: user.name },
+      { id: user.id, role: user.role, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
@@ -85,30 +106,9 @@ exports.login = async (req, res) => {
 };
 
 exports.refresh = async (req, res) => {
-  // Implement token refresh logic here
   res.json({ message: 'Token refresh endpoint' });
 };
 
 exports.logout = async (req, res) => {
-  // In production: blacklist token in Redis
   res.json({ message: 'Logged out successfully' });
-};
-
-exports.requestOTP = async (req, res) => {
-  const { phone } = req.body;
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore.set(phone, { otp, expires: Date.now() + 5 * 60 * 1000 });
-  // In production: send SMS via Twilio/MSG91
-  logger.info(`OTP for ${phone}: ${otp}`);
-  res.json({ message: 'OTP sent to your phone', dev_otp: process.env.NODE_ENV === 'development' ? otp : undefined });
-};
-
-exports.verifyOTP = async (req, res) => {
-  const { phone, otp } = req.body;
-  const record = otpStore.get(phone);
-  if (!record || record.expires < Date.now() || record.otp !== otp) {
-    return res.status(400).json({ error: 'Invalid or expired OTP' });
-  }
-  otpStore.delete(phone);
-  res.json({ message: 'OTP verified successfully', verified: true });
 };

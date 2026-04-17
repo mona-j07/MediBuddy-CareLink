@@ -13,7 +13,7 @@ exports.getMedicines = async (req, res) => {
        LEFT JOIN dose_logs dl ON dl.medicine_id = m.id AND dl.log_date = CURRENT_DATE
        WHERE m.user_id = $1 AND m.active = TRUE
        GROUP BY m.id ORDER BY m.created_at DESC`,
-      [req.user.userId]
+      [req.user.id]
     );
     res.json(meds.rows);
   } catch (err) {
@@ -29,9 +29,9 @@ exports.addMedicine = async (req, res) => {
     await db.query(
       `INSERT INTO medicines (id,user_id,name,dosage,frequency,times,notes,prescribed_by,start_date,end_date,active,created_at)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,TRUE,NOW())`,
-      [id, req.user.userId, name, dosage, frequency, JSON.stringify(times), notes, prescribed_by, start_date, end_date]
+      [id, req.user.id, name, dosage, frequency, JSON.stringify(times), notes, prescribed_by, start_date, end_date]
     );
-    logger.info(`Medicine added: ${name} for user ${req.user.userId}`);
+    logger.info(`Medicine added: ${name} for user ${req.user.id}`);
     res.status(201).json({ id, message: `${name} added to your medicines` });
   } catch (err) {
     logger.error('addMedicine:', err);
@@ -43,13 +43,13 @@ exports.updateMedicine = async (req, res) => {
   const { name, dosage, frequency, times, notes } = req.body;
   await db.query(
     'UPDATE medicines SET name=$1,dosage=$2,frequency=$3,times=$4,notes=$5,updated_at=NOW() WHERE id=$6 AND user_id=$7',
-    [name, dosage, frequency, JSON.stringify(times), notes, req.params.id, req.user.userId]
+    [name, dosage, frequency, JSON.stringify(times), notes, req.params.id, req.user.id]
   );
   res.json({ message: 'Medicine updated' });
 };
 
 exports.deleteMedicine = async (req, res) => {
-  await db.query('UPDATE medicines SET active=FALSE WHERE id=$1 AND user_id=$2', [req.params.id, req.user.userId]);
+  await db.query('UPDATE medicines SET active=FALSE WHERE id=$1 AND user_id=$2', [req.params.id, req.user.id]);
   res.json({ message: 'Medicine deactivated' });
 };
 
@@ -60,7 +60,7 @@ exports.logDose = async (req, res) => {
     `INSERT INTO dose_logs (id, medicine_id, user_id, status, taken_at, log_date, notes)
      VALUES ($1,$2,$3,$4,$5,CURRENT_DATE,$6)
      ON CONFLICT (medicine_id, log_date) DO UPDATE SET status=$4, taken_at=$5`,
-    [logId, req.params.id, req.user.userId, status, taken_at || new Date(), notes]
+    [logId, req.params.id, req.user.id, status, taken_at || new Date(), notes]
   );
   res.json({ message: `Dose ${status} at ${new Date().toLocaleTimeString()}` });
 };
@@ -72,7 +72,7 @@ exports.getAdherence = async (req, res) => {
      FROM dose_logs
      WHERE user_id=$1 AND log_date >= NOW()-INTERVAL '${days} days'
      GROUP BY log_date, status ORDER BY log_date DESC`,
-    [req.params.userId]
+    [req.user.id]
   );
   const taken  = stats.rows.filter(r => r.status === 'taken').length;
   const total  = stats.rows.length;
@@ -87,7 +87,7 @@ exports.getTodayReminders = async (req, res) => {
      FROM medicines m
      LEFT JOIN dose_logs dl ON dl.medicine_id=m.id AND dl.log_date=CURRENT_DATE
      WHERE m.user_id=$1 AND m.active=TRUE`,
-    [req.user.userId]
+    [req.user.id]
   );
   res.json(meds.rows);
 };

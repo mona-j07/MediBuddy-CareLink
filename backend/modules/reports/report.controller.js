@@ -14,7 +14,7 @@ exports.addReport = async (req, res) => {
     await db.query(
       `INSERT INTO medical_reports (id, user_id, report_name, report_date, file_path, created_at)
        VALUES ($1, $2, $3, $4, $5, NOW())`,
-      [id, patientId || req.user.userId, name, date, filePath]
+      [id, patientId || req.user.id, name, date, filePath]
     );
 
     res.status(201).json({ id, message: 'Report saved successfully' });
@@ -26,7 +26,7 @@ exports.addReport = async (req, res) => {
 
 exports.getReports = async (req, res) => {
   try {
-    const targetUserId = req.query.patientId || req.user.userId;
+    const targetUserId = req.query.patientId || req.user.id;
     const result = await db.query(
       `SELECT * FROM medical_reports WHERE user_id = $1 ORDER BY report_date DESC`,
       [targetUserId]
@@ -40,7 +40,7 @@ exports.getReports = async (req, res) => {
 
 exports.deleteReport = async (req, res) => {
   try {
-    await db.query('DELETE FROM medical_reports WHERE id = $1 AND user_id = $2', [req.params.id, req.user.userId]);
+    await db.query('DELETE FROM medical_reports WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
     res.json({ message: 'Report deleted successfully' });
   } catch (err) {
     logger.error('deleteReport:', err);

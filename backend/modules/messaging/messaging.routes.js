@@ -51,4 +51,13 @@ router.post('/send', authenticate, async (req, res) => {
   res.status(201).json({ messageId: msgId, conversationId: convId });
 });
 
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    await db.query('DELETE FROM messages WHERE id=$1 AND sender_id=$2', [req.params.id, req.user.id]);
+    res.json({ message: 'Message deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete message' });
+  }
+});
+
 module.exports = router;

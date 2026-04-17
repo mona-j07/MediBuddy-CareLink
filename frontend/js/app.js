@@ -195,11 +195,13 @@
       history.pushState({ view: viewId }, '', `#${viewId}`);
     }
 
-    // Lazy-render community/family/doctor/history when visited
+    // Lazy-render services when visited
     if (viewId === 'community')      CommunityService.render();
     if (viewId === 'family')         FamilyService.render();
     if (viewId === 'doctor')         DoctorService.render();
     if (viewId === 'health-history') HistoryService.render('all');
+    if (viewId === 'messages')       MessageService.fetchMessages();
+    if (viewId === 'medicines')      typeof MedicineService !== 'undefined' && MedicineService.render();
 
     // Close sidebar on mobile
     if (window.innerWidth <= 900) {

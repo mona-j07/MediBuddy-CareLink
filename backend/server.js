@@ -149,7 +149,7 @@ server.listen(PORT, async () => {
     await db.connectMongo();
     logger.info('✅ Databases connected');
   } catch (err) {
-    logger.error('Database connection failed:', err.message);
+    logger.error('Database connection failed:', err);
   }
 });
 
