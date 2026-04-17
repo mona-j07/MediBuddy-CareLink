@@ -331,6 +331,37 @@
     });
   }
 
+  // ── Profile Management ───────────────────────────────────
+  window.app = {
+    editProfile: function() {
+      const user = AuthService.getSession()?.user;
+      if (!user) return;
+      document.getElementById('edit-name').value = user.name || '';
+      document.getElementById('edit-phone').value = user.phone || '';
+      document.getElementById('edit-age').value = user.age || '';
+      document.getElementById('edit-language').value = user.language || 'en';
+      document.getElementById('edit-profile-modal')?.classList.remove('hidden');
+    },
+
+    saveProfile: function() {
+      const updated = {
+        name: document.getElementById('edit-name').value,
+        phone: document.getElementById('edit-phone').value,
+        age: document.getElementById('edit-age').value,
+        language: document.getElementById('edit-language').value
+      };
+      
+      // In production: await api.put('/profile/update', updated);
+      showToast('Profile updated successfully!', 'success');
+      closeModal('edit-profile-modal');
+      // Update session locally for demo purposes
+      const session = AuthService.getSession();
+      session.user = { ...session.user, ...updated };
+      localStorage.setItem('medibuddy_session', JSON.stringify(session));
+      AuthService.updateUserUI(session.user);
+    }
+  };
+
   // ── Language Selector ────────────────────────────────────
   function bindLanguageSelector() {
     // Handled in index.html module script

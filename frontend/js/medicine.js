@@ -47,12 +47,15 @@ const MedicineService = (function () {
           </div>
         </div>
         <div class="mc-actions">
-          <button class="mc-take-btn ${med.taken ? 'taken' : ''}"
+           <button class="mc-take-btn ${med.taken ? 'taken' : ''}"
             id="take-btn-${med.id}"
             onclick="MedicineService.markTaken(${med.id})">
             ${med.taken ? '✓ Taken' : 'Mark Taken'}
           </button>
-          <button class="mc-skip-btn" onclick="MedicineService.skipDose(${med.id})">Skip</button>
+          <div class="crud-actions">
+            <button class="edit-btn" onclick="MedicineService.openEditModal('${med.id}')" title="Edit">✏️ Edit</button>
+            <button class="delete-btn" onclick="MedicineService.deleteMedicine('${med.id}')" title="Delete">🗑️ Delete</button>
+          </div>
         </div>
       </div>
     `).join('');
@@ -118,10 +121,37 @@ const MedicineService = (function () {
     showToast(`✅ ${name} added to your medicines!`, 'success');
   }
 
-  function openAddModal() {
-    const modal = document.getElementById('add-medicine-modal');
-    if (modal) modal.classList.remove('hidden');
+  async function deleteMedicine(id) {
+    if (!confirm('Are you sure you want to delete this medicine?')) return;
+    
+    try {
+      // Add real API call here in production: await api.delete(`/medicine/delete/${id}`);
+      medicines = medicines.filter(m => m.id != id);
+      renderMedicineList();
+      showToast('🗑️ Medicine deleted.', 'success');
+      speak("Medicine removed.");
+    } catch (err) {
+      showToast('Failed to delete medicine.', 'danger');
+    }
   }
 
-  return { render, markTaken, skipDose, addMedicine, openAddModal };
+  function openEditModal(id) {
+    const med = medicines.find(m => m.id == id);
+    if (!med) return;
+    
+    // Fill modal with current values
+    const modal = document.getElementById('add-medicine-modal');
+    if (!modal) return;
+    
+    document.getElementById('med-name').value = med.name;
+    document.getElementById('med-time').value = med.time;
+    // ... set other fields
+    
+    modal.classList.remove('hidden');
+    // Change button text to "Update"
+    const btn = document.getElementById('save-medicine-btn');
+    if (btn) btn.textContent = '🔄 Update Medicine';
+  }
+
+  return { render, markTaken, skipDose, addMedicine, openAddModal, deleteMedicine, openEditModal };
 })();

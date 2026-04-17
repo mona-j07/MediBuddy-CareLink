@@ -214,6 +214,9 @@
       <button class="nav-item" data-view="doctor" id="nav-doctor">
         <span class="nav-icon">👨‍⚕️</span><span class="nav-label">Doctors</span>
       </button>
+      <button class="nav-item" data-view="messages" id="nav-messages">
+        <span class="nav-icon">📩</span><span class="nav-label">Messages</span>
+      </button>
 
       <div class="nav-separator"></div>
 
@@ -631,6 +634,40 @@
           </div>
         </div>
 
+        <!-- Edit Profile Modal -->
+        <div class="modal hidden" id="edit-profile-modal">
+          <div class="modal-overlay" onclick="closeModal('edit-profile-modal')"></div>
+          <div class="modal-card">
+            <h3>Edit My Profile</h3>
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="edit-name" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="edit-phone" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Age</label>
+                <input type="number" id="edit-age" />
+              </div>
+              <div class="form-group">
+                <label>Language</label>
+                <select id="edit-language">
+                  <option value="en">English</option>
+                  <option value="hi">Hindi</option>
+                  <option value="ta">Tamil</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button class="primary-btn" onclick="app.saveProfile()">💾 Save Changes</button>
+              <button class="ghost-btn" onclick="closeModal('edit-profile-modal')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Adherence Chart -->
         <div class="section-header" style="margin-top:2rem"><h2>📊 Adherence History</h2></div>
         <div class="glass-card adherence-chart-card">
@@ -857,6 +894,10 @@
             </div>
             <button type="submit" class="primary-btn">📁 Save Report</button>
           </form>
+          <hr style="margin: 2rem 0; opacity: 0.1;">
+          <div class="medicine-list" id="report-list">
+             <!-- Populated by JS -->
+          </div>
         </div>
       </section>
 
@@ -869,6 +910,19 @@
         <div class="glass-card">
           <div class="medicine-list">
             <div class="no-doctors">No pending consultations.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== MESSAGES VIEW ========== -->
+      <section class="view" id="view-messages">
+        <div class="view-header">
+          <h1>Message History 📩</h1>
+          <p class="view-subtitle">Your sent SMS and system logs.</p>
+        </div>
+        <div class="glass-card">
+          <div class="medicine-list" id="message-list">
+            <div class="no-doctors">No messages logged.</div>
           </div>
         </div>
       </section>
@@ -897,7 +951,10 @@
               <span class="value" id="profile-lang">English</span>
             </div>
           </div>
-          <button class="logout-btn-full" onclick="AuthService.logout()">🚪 Log Out</button>
+          <div class="crud-actions" style="margin-top: 2rem;">
+            <button class="edit-btn" style="flex:1" onclick="app.editProfile()">✏️ Edit Profile</button>
+            <button class="logout-btn-full" style="flex:1" onclick="AuthService.logout()">🚪 Log Out</button>
+          </div>
         </div>
       </section>
 
@@ -1020,6 +1077,7 @@
 <script src="js/triage-ai.js"></script>
 <script src="js/emergency.js"></script>
 <script src="js/medicine.js"></script>
+<script src="js/messages.js"></script>
 <script src="js/community.js"></script>
 <!-- NEW CONTROLLED VOICE & DOCTOR SYSTEM -->
 <script type="module">

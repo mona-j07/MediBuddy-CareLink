@@ -10,5 +10,6 @@ const upload = multer({ dest: 'uploads/' });
 
 router.post('/add', auth, upload.single('report_file'), controller.addReport);
 router.get('/', auth, controller.getReports);
+router.delete('/:id', auth, controller.deleteReport);
 
 module.exports = router;

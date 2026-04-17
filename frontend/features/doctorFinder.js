@@ -32,6 +32,13 @@ export const showDoctorsUI = (doctors) => {
         </span>
       </div>
     `;
+    const smsBtn = card.querySelector('.msg-btn');
+    if (smsBtn) {
+      smsBtn.addEventListener('click', (e) => {
+        MessageService.logNewMessage(doc.name, "Consultation request from MediBuddy CareLink");
+      });
+    }
+    
     container.appendChild(card);
   });
   

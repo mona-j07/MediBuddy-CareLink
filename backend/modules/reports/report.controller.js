@@ -37,3 +37,13 @@ exports.getReports = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch reports' });
   }
 };
+
+exports.deleteReport = async (req, res) => {
+  try {
+    await db.query('DELETE FROM medical_reports WHERE id = $1 AND user_id = $2', [req.params.id, req.user.userId]);
+    res.json({ message: 'Report deleted successfully' });
+  } catch (err) {
+    logger.error('deleteReport:', err);
+    res.status(500).json({ error: 'Failed to delete report' });
+  }
+};

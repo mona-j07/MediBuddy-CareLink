@@ -49,6 +49,17 @@ CREATE TABLE IF NOT EXISTS medical_reports (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- MESSAGES / SMS LOG TABLE
+CREATE TABLE IF NOT EXISTS messages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    sender VARCHAR(255) NOT NULL,
+    receiver VARCHAR(255) NOT NULL,
+    message_text TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'sent',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE family_links (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     primary_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
