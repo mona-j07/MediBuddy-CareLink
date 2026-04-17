@@ -32,6 +32,9 @@ router.post('/login',
 
 router.post('/refresh', controller.refresh);
 router.post('/logout',  controller.logout);
+router.post('/register',   controller.register);
+router.post('/verify-otp', controller.verifyOTP);
+router.post('/login',      controller.login);
 router.post('/request-otp', controller.requestOTP);
 router.post('/verify-otp',  controller.verifyOTP);
 

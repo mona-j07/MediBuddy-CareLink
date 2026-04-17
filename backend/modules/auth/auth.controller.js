@@ -38,26 +38,48 @@ exports.register = async (req, res) => {
   }
 };
 
+exports.verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const user = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (user.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+
+    const userData = user.rows[0];
+    if (userData.is_verified) return res.status(400).json({ error: 'Account already verified' });
+    if (new Date() > new Date(userData.otp_expiry)) return res.status(400).json({ error: 'OTP expired' });
+    if (userData.otp_code !== otp) return res.status(400).json({ error: 'Invalid OTP' });
+
+    await db.query('UPDATE users SET is_verified = TRUE, otp_code = NULL WHERE id = $1', [userData.id]);
+    res.json({ message: 'Account verified successfully' });
+  } catch (err) {
+    logger.error('verifyOTP:', err);
+    res.status(500).json({ error: 'Verification failed' });
+  }
+};
+
 exports.login = async (req, res) => {
   try {
-    const { phone, password } = req.body;
-    const result = await db.query(
-      'SELECT id, name, role, password_hash, language FROM users WHERE phone = $1',
-      [phone]
-    );
-    if (result.rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    const { email, password } = req.body;
+    const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = result.rows[0];
-    const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = generateToken({ id: user.id, role: user.role, phone });
-    await db.query('UPDATE users SET last_login=NOW() WHERE id=$1', [user.id]);
-    logger.info(`User logged in: ${phone}`);
-    res.json({ token, user: { id: user.id, name: user.name, role: user.role, language: user.language } });
+    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    if (!user.is_verified) {
+      return res.status(401).json({ error: 'Email not verified. Please verify your account.' });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, role: user.role, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({ token, user: { id: user.id, name: user.name, role: user.role, email: user.email } });
   } catch (err) {
-    logger.error('Login error:', err);
+    logger.error('login:', err);
     res.status(500).json({ error: 'Login failed' });
   }
 };
