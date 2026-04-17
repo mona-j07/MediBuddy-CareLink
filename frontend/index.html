@@ -54,10 +54,6 @@
           <div><strong>Medicine Tracker</strong><p>Never miss a dose with smart reminders</p></div>
         </div>
       </div>
-      <div class="auth-demo-note">
-        <span>🔓</span>
-        <span>No DB? Use demo credentials to explore the full app</span>
-      </div>
     </div>
 
     <!-- Right Panel -->
@@ -82,13 +78,6 @@
         </div>
         <div id="auth-error" class="auth-error" style="display:none"></div>
         <button type="submit" class="auth-submit-btn" id="login-btn">🔐 Sign In</button>
-        <div class="auth-divider"><span>or try demo</span></div>
-        <div class="demo-pills">
-          <button type="button" class="demo-pill" data-phone="9999999999" data-password="demo123">👴 Patient</button>
-          <button type="button" class="demo-pill" data-phone="8888888888" data-password="demo123">👨‍⚕️ Doctor</button>
-          <button type="button" class="demo-pill" data-phone="7777777777" data-password="demo123">👩 Caretaker</button>
-          <button type="button" class="demo-pill" data-phone="6666666666" data-password="demo123">🏥 CHW</button>
-        </div>
       </form>
 
       <!-- REGISTER FORM -->
@@ -833,6 +822,85 @@
         </div>
       </section>
 
+      <!-- ========== CARETAKER PATIENTS VIEW ========== -->
+      <section class="view" id="view-caretaker-patients">
+        <div class="view-header">
+          <h1>My Patients 👥</h1>
+          <p class="view-subtitle">Monitor and manage the health of everyone under your care.</p>
+        </div>
+        <div class="glass-card">
+          <div class="medicine-list" id="caretaker-patient-list">
+            <div class="no-doctors">No patients linked yet.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CARETAKER REPORTS VIEW ========== -->
+      <section class="view" id="view-caretaker-reports">
+        <div class="view-header">
+          <h1>Medical Reports 📄</h1>
+          <p class="view-subtitle">Upload and store medical records for your patients.</p>
+        </div>
+        <div class="glass-card">
+          <form class="triage-info-row" id="report-form" style="grid-template-columns: 1fr;">
+            <div class="triage-info-group">
+              <label>Report Name</label>
+              <input type="text" placeholder="e.g. Blood Test - April 2024" required />
+            </div>
+            <div class="triage-info-group">
+              <label>Report Date</label>
+              <input type="date" required />
+            </div>
+            <div class="triage-info-group">
+              <label>Upload File</label>
+              <input type="file" required />
+            </div>
+            <button type="submit" class="primary-btn">📁 Save Report</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ========== DOCTOR CONSULTATIONS VIEW ========== -->
+      <section class="view" id="view-doctor-consultations">
+        <div class="view-header">
+          <h1>Consultation Requests 📩</h1>
+          <p class="view-subtitle">Review and respond to patient inquiries.</p>
+        </div>
+        <div class="glass-card">
+          <div class="medicine-list">
+            <div class="no-doctors">No pending consultations.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== PROFILE VIEW ========== -->
+      <section class="view" id="view-profile">
+        <div class="view-header">
+          <h1>My Profile 👤</h1>
+          <p class="view-subtitle">Manage your account and preferences.</p>
+        </div>
+        <div class="glass-card profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar-large" id="profile-avatar">R</div>
+            <div class="profile-meta">
+              <h2 id="profile-name">Rajan Kumar</h2>
+              <p id="profile-role">Elder Patient</p>
+            </div>
+          </div>
+          <div class="profile-details">
+            <div class="detail-item">
+              <span class="label">Phone</span>
+              <span class="value" id="profile-phone">9999999999</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Language</span>
+              <span class="value" id="profile-lang">English</span>
+            </div>
+          </div>
+          <button class="logout-btn-full" onclick="AuthService.logout()">🚪 Log Out</button>
+        </div>
+      </section>
+
     </div><!-- /views-container -->
   </main>
 </div><!-- /app -->
@@ -872,6 +940,17 @@
     <div class="wave-bar" style="--delay:0.18s"></div>
   </div>
   <div class="voice-transcript" id="voice-transcript">
+    <script>
+      const transcriptElement = document.getElementById('voice-transcript');
+      // Update transcript in UI
+      voiceService.onResultCallback = (text, isFinal) => {
+        if (transcriptElement) {
+          transcriptElement.textContent = text;
+          transcriptElement.style.opacity = isFinal ? '1' : '0.7';
+          transcriptElement.style.fontStyle = isFinal ? 'normal' : 'italic';
+        }
+      };
+    </script>
     <p class="transcript-placeholder">Say something like: "I have fever and headache" or "Call doctor" or "Show my medicines"</p>
   </div>
   <div class="voice-recognized" id="voice-recognized"></div>
@@ -947,9 +1026,24 @@
   import voiceService from './services/voice.js';
   import { showDoctorsUI } from './features/doctorFinder.js';
   
-  // Initialize voice interaction on FAB click if preferred
-  document.getElementById('voice-fab').addEventListener('click', () => {
-    voiceService.start();
+  // Expose to window for app.js
+  window.voiceService = voiceService;
+  window.showDoctorsUI = showDoctorsUI;
+
+  // Initialize voice interaction on FAB click
+  const voiceFab = document.getElementById('voice-fab');
+  if (voiceFab) {
+    voiceFab.addEventListener('click', () => {
+      voiceService.start();
+    });
+  }
+
+  // Handle manual language selection
+  document.getElementById('language-select')?.addEventListener('change', (e) => {
+    const lang = e.target.value;
+    localStorage.setItem('user_language', lang + '-IN');
+    voiceService.recognition.lang = lang + '-IN';
+    voiceService.speak(`Language switched to ${lang}`);
   });
 </script>
 <script src="js/app.js"></script>

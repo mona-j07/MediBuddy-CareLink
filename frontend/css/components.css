@@ -774,6 +774,8 @@
 .doctor-card .distance { font-size: 0.75rem; font-weight: 700; color: var(--primary-light); background: rgba(108,99,255,0.1); padding: 4px 10px; border-radius: var(--radius-full); }
 .doctor-card .doc-actions { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); }
 .doctor-card .call-btn { background: linear-gradient(135deg, var(--success), var(--accent)); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; transition: all var(--trans-fast); }
+.doctor-card .chat-btn { background: rgba(108,99,255,0.15); color: var(--primary-light); border: 1px solid rgba(108,99,255,0.3); padding: 10px 20px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; margin-left: 0.5rem; transition: all var(--trans-fast); }
+.doctor-card .chat-btn:hover { background: rgba(108,99,255,0.3); }
 .doctor-card .call-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(6,214,160,0.3); }
 .doctor-card .status { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 .doctor-card .status.available { color: var(--success); }

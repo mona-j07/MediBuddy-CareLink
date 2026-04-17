@@ -6,19 +6,13 @@
 const AuthService = (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:4000/api';
-
-  // Demo users for offline/no-DB mode
-  const DEMO_USERS = [
-    { phone: '9999999999', password: 'demo123', name: 'Rajan Kumar',  role: 'patient',    language: 'en', avatar: 'R' },
-    { phone: '8888888888', password: 'demo123', name: 'Dr. Priya',    role: 'doctor',     language: 'en', avatar: 'P' },
-    { phone: '7777777777', password: 'demo123', name: 'Sunita Devi',  role: 'caretaker',  language: 'hi', avatar: 'S' },
-    { phone: '6666666666', password: 'demo123', name: 'Mohan CHW',    role: 'chw',        language: 'en', avatar: 'M' },
-  ];
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:4000/api'
+    : 'https://medibuddy-ai-k4pn.onrender.com/api';
 
   // ── Session management ──────────────────────────────────
   function saveSession(user, token) {
-    localStorage.setItem('mb_token', token || 'demo_token');
+    localStorage.setItem('mb_token', token);
     localStorage.setItem('mb_user',  JSON.stringify(user));
   }
 
@@ -41,7 +35,6 @@ const AuthService = (function () {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(5000),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Request failed');
@@ -50,46 +43,24 @@ const AuthService = (function () {
 
   // ── Login ───────────────────────────────────────────────
   async function login(phone, password) {
-    // 1. Try real backend
     try {
       const data = await apiPost('/auth/login', { phone, password });
       saveSession(data.user, data.token);
       return { success: true, user: data.user, mode: 'live' };
     } catch (err) {
-      console.warn('Backend login failed, trying demo mode:', err.message);
+      return { success: false, error: err.message };
     }
-
-    // 2. Fallback to demo users
-    const demo = DEMO_USERS.find(u => u.phone === phone && u.password === password);
-    if (demo) {
-      const user = { id: 'demo_' + demo.phone, name: demo.name, role: demo.role, language: demo.language, avatar: demo.avatar };
-      saveSession(user, 'demo_token');
-      return { success: true, user, mode: 'demo' };
-    }
-
-    return { success: false, error: 'Invalid phone number or password.' };
   }
 
   // ── Register ────────────────────────────────────────────
   async function register(data) {
-    // Try real backend
     try {
       const res = await apiPost('/auth/register', data);
       const user = { id: res.userId, name: data.name, role: data.role, language: data.language || 'en' };
       saveSession(user, res.token);
       return { success: true, user, mode: 'live' };
     } catch (err) {
-      console.warn('Backend register failed, using demo mode:', err.message);
-      // Demo register — just simulate
-      const user = {
-        id: 'demo_' + Date.now(),
-        name: data.name,
-        role: data.role,
-        language: data.language || 'en',
-        avatar: data.name.charAt(0).toUpperCase(),
-      };
-      saveSession(user, 'demo_token');
-      return { success: true, user, mode: 'demo' };
+      return { success: false, error: err.message };
     }
   }
 
@@ -148,6 +119,19 @@ const AuthService = (function () {
     if (nameEl)    nameEl.textContent = user.name;
     if (avatarEl)  avatarEl.textContent = avatar;
     if (topAvatar) topAvatar.textContent = avatar;
+
+    // Profile View Update
+    const profName = document.getElementById('profile-name');
+    const profRole = document.getElementById('profile-role');
+    const profPhone = document.getElementById('profile-phone');
+    const profLang = document.getElementById('profile-lang');
+    const profAvatar = document.getElementById('profile-avatar');
+
+    if (profName) profName.textContent = user.name;
+    if (profRole) profRole.textContent = user.role;
+    if (profPhone) profPhone.textContent = user.phone || 'N/A';
+    if (profLang) profLang.textContent = user.language || 'English';
+    if (profAvatar) profAvatar.textContent = avatar;
 
     const hour = new Date().getHours();
     const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';

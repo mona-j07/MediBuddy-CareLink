@@ -73,6 +73,10 @@
   }
 
   function initApp() {
+    const session = AuthService.getSession();
+    const userRole = session?.user?.role || 'CLIENT';
+
+    setupRoleBasedUI(userRole);
     bindNavigation();
     bindVoiceControls();
     bindTriageControls();
@@ -89,16 +93,64 @@
     DoctorService.render();
     HistoryService.render('all');
 
-    // Init voice engine
-    VoiceEngine.init('en');
+    // Init voice engine (Only for CLIENT)
+    // if (userRole === 'CLIENT' && window.voiceService) {
+    //   window.voiceService.initRecognition();
+    // }
 
     // Start vitals simulation
     startVitalsSimulation();
 
     // Announce app load
     setTimeout(() => {
-      speak('Welcome to MediBuddy CareLink. Tap the microphone to speak.');
+      if (userRole === 'CLIENT') {
+        // speak('Welcome to MediBuddy CareLink. Tap the microphone to speak.');
+      }
     }, 1000);
+  }
+
+  function setupRoleBasedUI(role) {
+    const nav = document.querySelector('.sidebar-nav');
+    if (!nav) return;
+
+    // Define navigation items per role
+    const ROLE_NAV = {
+      'CLIENT': [
+        { view: 'dashboard', icon: '🏠', label: 'Dashboard' },
+        { view: 'triage', icon: '🩺', label: 'AI Triage' },
+        { view: 'medicine', icon: '💊', label: 'Medicines' },
+        { view: 'maps', icon: '🗺️', label: 'Nearby Care' },
+        { view: 'doctor', icon: '👨‍⚕️', label: 'Doctors' }
+      ],
+      'CARETAKER': [
+        { view: 'dashboard', icon: '🏠', label: 'Dashboard' },
+        { view: 'caretaker-patients', icon: '👥', label: 'My Patients' },
+        { view: 'caretaker-reports', icon: '📄', label: 'Medical Reports' }
+      ],
+      'DOCTOR': [
+        { view: 'dashboard', icon: '🏠', label: 'Dashboard' },
+        { view: 'doctor-consultations', icon: '📩', label: 'Consultations' }
+      ]
+    };
+
+    const items = ROLE_NAV[role] || ROLE_NAV['CLIENT'];
+    
+    // Build sidebar
+    let navHtml = '';
+    items.forEach(item => {
+      navHtml += `<button class="nav-item ${item.view === 'dashboard' ? 'active' : ''}" data-view="${item.view}" id="nav-${item.view}">
+        <span class="nav-icon">${item.icon}</span><span class="nav-label">${item.label}</span>
+      </button>`;
+    });
+
+    if (role === 'CLIENT') {
+      navHtml += `<div class="nav-separator"></div>
+      <button class="nav-item emergency-nav" id="nav-emergency">
+        <span class="nav-icon">🆘</span><span class="nav-label">Emergency SOS</span>
+      </button>`;
+    }
+
+    nav.innerHTML = navHtml;
   }
 
   // Expose initApp globally so auth.js can call it after login
@@ -119,7 +171,7 @@
   }
 
   // ── switchView (global) ──────────────────────────────────
-  window.switchView = function (viewId) {
+  window.switchView = function (viewId, pushState = true) {
     if (!document.getElementById(`view-${viewId}`)) return;
 
     // Deactivate old view
@@ -136,7 +188,12 @@
 
     // Update breadcrumb
     const bc = document.getElementById('breadcrumb');
-    if (bc) bc.textContent = VIEW_LABELS[viewId] || viewId;
+    if (bc) bc.textContent = VIEW_LABELS[viewId] || viewId.charAt(0).toUpperCase() + viewId.slice(1);
+
+    // Push to history
+    if (pushState) {
+      history.pushState({ view: viewId }, '', `#${viewId}`);
+    }
 
     // Lazy-render community/family/doctor/history when visited
     if (viewId === 'community')      CommunityService.render();
@@ -151,6 +208,15 @@
 
     // Scroll to top
     document.querySelector('.views-container')?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle browser back/forward
+  window.onpopstate = (e) => {
+    if (e.state && e.state.view) {
+      window.switchView(e.state.view, false);
+    } else {
+      window.switchView('dashboard', false);
+    }
   };
 
   // ── Voice Controls ───────────────────────────────────────
@@ -234,6 +300,12 @@
       const badge = document.getElementById('notif-badge');
       if (badge) badge.style.display = 'none';
     });
+
+    // Profile triggers
+    const topAvatar = document.getElementById('topbar-avatar');
+    const userCard = document.querySelector('.user-card');
+    if (topAvatar) topAvatar.addEventListener('click', () => window.switchView('profile'));
+    if (userCard) userCard.addEventListener('click', () => window.switchView('profile'));
   }
 
   window.closeNotif = function () {
@@ -261,10 +333,7 @@
 
   // ── Language Selector ────────────────────────────────────
   function bindLanguageSelector() {
-    const sel = document.getElementById('language-select');
-    if (sel) sel.addEventListener('change', () => {
-      VoiceEngine.setLanguage(sel.value);
-    });
+    // Handled in index.html module script
   }
 
 })();

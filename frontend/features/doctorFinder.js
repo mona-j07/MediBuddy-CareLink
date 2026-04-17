@@ -26,6 +26,7 @@ export const showDoctorsUI = (doctors) => {
       </div>
       <div class="doc-actions">
         <button class="call-btn" onclick="window.location.href='tel:${doc.phone}'">📞 Call</button>
+        <button class="chat-btn" onclick="window.location.href='sms:${doc.phone}?body=Hello Dr. ${doc.name}, I need assistance regarding MediBuddy CareLink.'">💬 Chat</button>
         <span class="status ${doc.availability_status ? 'available' : 'busy'}">
           ${doc.availability_status ? 'Available' : 'Busy'}
         </span>

@@ -78,6 +78,34 @@ class VoiceService {
       };
     }
 
+    // 5. Add Medicine (NLP Parsing)
+    // Format: "Add tablet Paracetamol 2 doses at 8 PM"
+    const medMatch = input.match(/add (?:tablet|medicine|pill)?\s*([a-z0-9\s]+?)\s*(\d+\s*doses?)?\s*at\s*(\d+\s*(?:pm|am|:|\d+))/i);
+    if (medMatch || input.includes('add medicine') || input.includes('add tablet')) {
+      const name = medMatch ? medMatch[1].trim() : "Unknown Medicine";
+      const dosage = medMatch ? medMatch[2] || "1 dose" : "1 dose";
+      const rawTime = medMatch ? medMatch[3].toLowerCase() : "09:00";
+      
+      // Convert PM/AM to 24h format
+      let time = rawTime;
+      if (rawTime.includes('pm')) {
+        let hour = parseInt(rawTime);
+        if (hour < 12) hour += 12;
+        time = `${hour}:00`;
+      } else if (rawTime.includes('am')) {
+        let hour = parseInt(rawTime);
+        if (hour === 12) hour = 0;
+        time = `${hour.toString().padStart(2, '0')}:00`;
+      }
+
+      return {
+        intent: "ADD_MEDICINE",
+        action: "POST_MEDICINE",
+        data: { name, dosage, time },
+        confidence: 0.9
+      };
+    }
+
     return { intent, action, data, confidence };
   }
 }

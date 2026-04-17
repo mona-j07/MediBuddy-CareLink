@@ -29,6 +29,7 @@ const analyticsRoutes = require('./modules/analytics/analytics.routes');
 const notifRoutes     = require('./modules/notifications/notification.routes');
 const newVoiceRoutes  = require('./routes/voice.routes');
 const doctorRoutes    = require('./routes/doctor.routes');
+const reportRoutes    = require('./modules/reports/report.routes');
 
 // ── App Init ──────────────────────────────────────────────────
 const app    = express();
@@ -91,7 +92,8 @@ app.use('/api/analytics',     analyticsRoutes);
 app.use('/api/notifications', notifRoutes);
 app.use('/api/voice',         newVoiceRoutes); // Overriding or adding to voice
 app.use('/api/doctors',       doctorRoutes);
-app.use('/api/admin',         doctorRoutes); // For /admin/add-doctor
+app.use('/api/admin',         doctorRoutes);
+app.use('/api/reports',       reportRoutes);
 
 // ── WebSocket – Real-time vitals & messaging ──────────────────
 io.on('connection', (socket) => {

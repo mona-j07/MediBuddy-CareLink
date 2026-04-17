@@ -22,22 +22,42 @@ class VoiceService {
 
     this.recognition = new SpeechRecognition();
     this.recognition.continuous = true;
-    this.recognition.interimResults = false;
+    this.recognition.interimResults = true; // Show results immediately
     this.recognition.lang = localStorage.getItem('user_language') || 'en-US';
 
     this.recognition.onresult = async (event) => {
-      const text = event.results[event.results.length - 1][0].transcript.trim();
-      console.log('Voice Captured:', text);
-      
-      if (this.onResultCallback) this.onResultCallback(text);
-      
-      // Send to backend
-      const response = await api.sendVoiceCommand(text);
-      this.handleBackendResponse(response);
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      if (this.onResultCallback) {
+        this.onResultCallback(finalTranscript || interimTranscript, !!finalTranscript);
+      }
+
+      // If we have a final transcript, send to backend
+      if (finalTranscript) {
+        console.log('Final Voice Captured:', finalTranscript.trim());
+        const response = await api.sendVoiceCommand(finalTranscript.trim());
+        this.handleBackendResponse(response);
+      }
     };
 
     this.recognition.onend = () => {
-      if (this.isListening) this.recognition.start();
+      // Auto-restart if we are still supposed to be listening
+      if (this.isListening) {
+        try {
+          this.recognition.start();
+        } catch (e) {
+          console.error('Failed to restart recognition:', e);
+        }
+      }
     };
   }
 
@@ -84,6 +104,10 @@ class VoiceService {
       case 'GET_NEARBY_DOCTORS':
         this.fetchAndShowDoctors();
         break;
+      
+      case 'POST_MEDICINE':
+        this.addMedicineByVoice(data);
+        break;
 
       default:
         this.speak("I'm not sure how to help with that. Could you please repeat?");
@@ -107,6 +131,26 @@ class VoiceService {
         console.log('Doctors found:', result.doctors);
       }
     });
+  }
+
+  async addMedicineByVoice(data) {
+    try {
+      this.speak(`Adding ${data.name}, ${data.dosage} at ${data.time}`);
+      const result = await api.post('/medicine/add', {
+        name: data.name,
+        dosage: data.dosage,
+        times: [data.time]
+      });
+      console.log('Medicine Added:', result);
+      this.speak("Medicine added successfully.");
+      // Refresh UI if on medicine view
+      if (window.location.hash === '#medicine') {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Failed to add medicine by voice:', error);
+      this.speak("I couldn't add the medicine. Please try again.");
+    }
   }
 
   speak(text) {

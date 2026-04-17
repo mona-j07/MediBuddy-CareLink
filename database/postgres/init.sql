@@ -39,6 +39,16 @@ CREATE TABLE doctors (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- MEDICAL REPORTS TABLE
+CREATE TABLE IF NOT EXISTS medical_reports (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    report_name VARCHAR(255) NOT NULL,
+    report_date DATE NOT NULL,
+    file_path TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE family_links (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     primary_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
